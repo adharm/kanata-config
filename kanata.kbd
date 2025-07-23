@@ -1,0 +1,114 @@
+;; Kanata configuration for Canary layout with working layers and homerow mods
+
+(defcfg
+  process-unmapped-keys yes
+  log-layer-changes no
+)
+
+(defvar
+  tap-time 200
+  hold-time 200
+)
+
+;; Hand key definitions for homerow mods
+(defvar
+  left-hand-keys (
+    w l y p k
+    c r s t b  
+    j v d g q
+  )
+  right-hand-keys (
+    z x o u '
+    f n e i a
+    m h , . /
+  )
+)
+
+;; Source layer
+(defsrc
+  tab    q      w      e      r      t      y      u      i      o      p      [
+  caps   a      s      d      f      g      h      j      k      l      ;      '
+  lsft   z      x      c      v      b      n      m      ,      .      /      rsft
+                                 lmet  spc   rmet
+)
+
+;; Base layer with homerow mods
+(deflayer base
+  esc    w      l      y      p      k      z      x      o      u      '      @bsdl
+  @tab   @c     @r     @s     @t     b      f      @n     @e     @i     @a     @ret
+  @ss    j      v      d      g      q      m      h      @cma   @dot   @qxl   @fbsl
+                                lmet   spc   rmet
+)
+
+;; Nomods layer for when homerow mods are disabled
+(deflayer nomods
+  esc    w      l      y      p      k      z      x      o      u      '      bspc
+  tab    c      r      s      t      b      f      n      e      i      a      ret
+  lsft   j      v      d      g      q      m      h      ,      .      S-/    /
+                                lmet   spc   rmet
+)
+
+;; Navigation layer (activated by holding T)
+(deflayer navigation
+  _      _      _      _      _      _      0      b      up     w      S-4    _
+  _      lctl   lalt   lmet   lshft  _      pgup   left   down   rght   pgdn   _
+  _      _      _      _      _      _      S-9    [      g      ]      S-0    _
+                                _      _      _
+)
+
+;; Function layer (activated by holding N)
+(deflayer functions
+  _      f12    f7     f8     f9     _      _      _      _      _      _      _   
+  _      f11    f4     f5     f6     _      _      rshft  lmet   lalt   lctl   _   
+  _      f10    f1     f2     f3     _      _      _      _      _      _      _   
+                                _      _      _
+)
+
+;; Numbers layer (activated by holding Tab)
+(deflayer numbers
+  _      _      _      _      _      _      _      7      8      9      -      _   
+  _      lctl   lalt   lmet   lshft  _      _      4      5      6      +      _   
+  _      _      _      _      _      _      0      1      2      3      .      _   
+                                _      _      _
+)
+
+;; Symbols layer (activated by holding Return)
+(deflayer symbols
+  _      =      S-2    S-,    S-.    S-3    _      _      _      _      _      _   
+  _      S-4    S-5    S-6    -      S--    _      rshft  lmet   lalt   lctl   _   
+  _      S-7    S-8    S-grv  grv    S-\    _      _      _      _      _      _   
+                                _      _      _
+)
+
+(defalias
+  ;; Helper aliases for morphs
+  ss (tap-dance 200 ((one-shot 2000 lsft) (caps-word 2000)))
+  cma (fork , ; (lsft rsft))
+  dot (fork . S-; (lsft rsft))
+  qxl (fork S-/ S-1 (lsft rsft))
+  bsdl (fork bspc del (lsft rsft))
+  fbsl (fork / S-\ (lsft rsft))
+
+  ;; Layer switching keys - these use simple tap-hold
+  tab (tap-hold $tap-time $hold-time tab (layer-while-held numbers))
+  ret (tap-hold $tap-time $hold-time ret (layer-while-held symbols))
+  
+  ;; Homerow mod helper
+  tap (multi (layer-switch nomods) (on-idle-fakekey to-base tap 20))
+  
+  ;; Left hand homerow mods (C, R, S are modifiers, T activates navigation layer)
+  c (tap-hold-release-keys $tap-time $hold-time (multi c @tap) lctl $left-hand-keys)
+  r (tap-hold-release-keys $tap-time $hold-time (multi r @tap) lalt $left-hand-keys)
+  s (tap-hold-release-keys $tap-time $hold-time (multi s @tap) lmet $left-hand-keys)
+  t (tap-hold $tap-time $hold-time t (layer-while-held navigation))
+  
+  ;; Right hand homerow mods (N activates function layer, E, I, A are modifiers)
+  n (tap-hold $tap-time $hold-time n (layer-while-held functions))
+  e (tap-hold-release-keys $tap-time $hold-time (multi e @tap) lmet $right-hand-keys)
+  i (tap-hold-release-keys $tap-time $hold-time (multi i @tap) lalt $right-hand-keys)
+  a (tap-hold-release-keys $tap-time $hold-time (multi a @tap) lctl $right-hand-keys)
+)
+
+(deffakekeys
+  to-base (layer-switch base)
+)
