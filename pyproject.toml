@@ -1,4 +1,0 @@
-[tool.uv.scripts]
-# Render an HTML cheatsheet for kenkyo layers
-render-layers = "python scripts/render_kanata_layers.py"
-
