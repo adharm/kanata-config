@@ -5,11 +5,29 @@
 
 (defsrc
   esc    f1     f2     f3     f4     f5     f6     f7     f8     f9     f10    f11    f12
-  lsgt   1      2      3      4      5      6      7      8      9      0      -      =      bspc
+  lsgt   1      2      3      4      5      6      7      8      9      0      -      =
   tab    q      w      e      r      t      y      u      i      o      p      [      ]
   caps   a      s      d      f      g      h      j      k      l      ;      '
   lsft   z      x      c      v      b      n      m      ,      .      /      rsft
-                              lmet   spc    rmet
+                                           spc
+)
+
+(deflayer main
+  esc    brdn   brup   ✗      ✗      ✗      ✗      prev   pp     next   mute   vold   volu
+  lsgt   1      2      3      4      5      6      7      8      9      0      -      =
+  tab    w      l      y      p      b      z      f      o      u      '      [      ]
+  caps   @c     @r     @s     @t     g      m      @n     @e     @i     @a     ;
+  lsft   q      j      v      d      k      x      h      ,      .      /      rsft
+                                          @spc
+)
+
+(deflayer extend
+  _      _      _      _      _      _      _      _      _      _      _      _      _
+  _      _      _      _      _      _      _      _      _      _      _      _      _
+  _      _      _      _      _      _      _      home   up     end    pgup   _      _
+  _      lctl   lalt   lsft   lmet   _      _      left   down   rght   pgdn   _
+  _      _      _      _      _      _      _      _      _      _      _      _
+                                            _
 )
 
 (defvar
@@ -32,32 +50,7 @@
   clear (multi (layer-switch main) (on-press release-virtualkey shift))
 )
 
-(defchords mtl $chord-timeout
-  (w  ) l
-  (  e) y
-  (w e) esc
-)
-
-(defchords mtr $chord-timeout
-  (i  ) o
-  (  o) u
-  (i o) bspc
-)
-
-(defchords mbl $chord-timeout
-  (x  ) (t! charmod j ralt)
-  (  c) v
-  (x c) tab
-)
-
-(defchords mbr $chord-timeout
-  (,  ) ,
-  (  .) (t! charmod . ralt)
-  (, .) ret
-)
-
 (defalias
-  ;; Home-row and specials
   c      (t! charmod c lctl)
   r      (t! charmod r lalt)
   s      (t! charmod s lsft)
@@ -66,121 +59,5 @@
   e      (t! charmod e rsft)
   i      (t! charmod i lalt)
   a      (t! charmod a rctl)
-  q      (t! charmod q lctl)
-  d      (t! charmod d (layer-while-held fumbol))
-  h      (t! charmod h (layer-while-held fumbol))
-  slash  (t! charmod / rctl)
   spc    (t! charmod spc (multi (layer-switch extend) (on-release tap-virtualkey clear)))
-
-  ;; Fumbol helpers
-  lsgt   (t! charmod lsgt lctl)
-  bsl    (t! charmod \ lctl)
-  d1     (t! charmod 1 lmet)
-  d2     (t! charmod 2 lalt)
-  d3     (t! charmod 3 lsft)
-  d4     (t! charmod 4 lctl)
-  d7     (t! charmod 7 rctl)
-  d8     (t! charmod 8 rsft)
-  d9     (t! charmod 9 lalt)
-  d0     (t! charmod 0 rmet)
-
-  ;; Canary chord outputs (map chords to Canary letters)
-  l      (chord mtl w)
-  y      (chord mtl e)
-  o      (chord mtr i)
-  u      (chord mtr o)
-  j      (chord mbl x)
-  v      (chord mbl c)
-  comma  (chord mbr ,)
-  dot    (chord mbr .)
-
-  ;; Fumbol chord aliases
-  f2     (chord ftl w)
-  f3     (chord ftl e)
-  f8     (chord ftr i)
-  f9     (chord ftr o)
-  btick  (chord fbl x)
-  dash   (chord fbl c)
-  lbrk   (chord fbr ,)
-  rbrkA  (chord fbr .)
-
-  ;; Extend-layer helpers
-  to_fumbol   (layer-switch fumbol)
-  press_shift (on-press press-virtualkey shift)
-
-  ;; Extend-layer simple keys (for alignment)
-  lmet   lmet
-  lalt   lalt
-  lsft   lsft
-  lctl   lctl
-  ins    ins
-  home   home
-  up     up
-  end    end
-  pgup   pgup
-  esc    esc
-  left   left
-  down   down
-  rght   rght
-  pgdn   pgdn
-  mute   mute
-  vold   vold
-  volu   volu
-  pp     pp
-  tab    tab
-  bspc   bspc
-  space  spc
-  del    del
-  ret    ret
-)
-
-(deflayer main
-  esc    f1     f2     f3     f4     f5     f6     f7     f8     f9     f10    f11    f12
-  lsgt   1      2      3      4      5      6      7      8      9      0      -      =      bspc
-  tab    w      @l     @y     p      b      z      f      @o     @u     '      [      ]
-  caps   @c     @r     @s     @t     g      m      @n     @e     @i     @a     ;
-  lsft   @q     @j     @v     @d     k      x      @h     @comma @dot   @slash   rsft
-                              lmet   @spc   rmet
-)
-
-(deflayer extend
-  _      _      _      _      _      _      _      _      _      _      _      _      _
-  _      _      _      _      _      _      _      _      _      _      _      _      _      _
-  _      _      _      @to_fumbol   @press_shift   _      @ins   @home  @up    @end   @pgup  _      _
-  _      @lmet  @lalt  @lsft  @lctl  _      @esc   @left  @down  @rght  @pgdn  _
-  _      @mute  @vold  @volu  @pp    _      @tab   @bspc  @space @del   @ret   _
-                              _      _      _
-)
-
-(defchords ftl $chord-timeout
-  (w  ) f2
-  (  e) f3
-  (w e) esc
-)
-
-(defchords ftr $chord-timeout
-  (i  ) f8
-  (  o) f9
-  (i o) bspc
-)
-
-(defchords fbl $chord-timeout
-  (x  ) (t! charmod ` ralt)
-  (  c) -
-  (x c) tab
-)
-
-(defchords fbr $chord-timeout
-  (,  ) [
-  (  .) (t! charmod ] ralt)
-  (, .) ret
-)
-
-(deflayer fumbol
-  _      _      _      _      _      _      _      _      _      _      _      _      _
-  _      _      _      _      _      _      _      _      _      _      _      _      _      _
-  _      f1     @f2    @f3    f4     f5     f6     f7     @f8    @f9    f10    _      _
-  _      @d1    @d2    @d3    @d4    5      6      @d7    @d8    @d9    @d0    _
-  _      @lsgt  @btick  @dash  =      f11    f12    '       @lbrk  @rbrkA  @bsl   _
-                              _      _      _
 )
